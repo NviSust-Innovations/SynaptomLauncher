@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SynaptOm — The Science of Advantage</title>
+  <meta name="description" content="SynaptOm — Translating Neuroscience into Peak Human Performance. Coming Soon." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0A192F;
+      --ink: #c9d7ef; /* subtle light text */
+      --white: #FFFFFF;
+      --blue: #00BFFF; /* accent */
+      --muted: #9fb3d6;
+      --card: rgba(255,255,255,0.06);
+      --stroke: rgba(255,255,255,0.12);
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--navy);
+      color: var(--white);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      overflow-x: hidden;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .container { width: min(1100px, 92%); margin-inline: auto; }
+    section { position: relative; padding: clamp(60px, 8vw, 120px) 0; }
+    h1, h2, h3 { font-family: Poppins, Inter, sans-serif; letter-spacing: .2px; line-height: 1.1; margin: 0; }
+    p { line-height: 1.65; margin: 0; }
+
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 10px; padding: 6px 12px; border-radius: 999px;
+      background: linear-gradient(90deg, rgba(0,191,255,.15), rgba(255,255,255,.06));
+      color: var(--white); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px;
+      border: 1px solid rgba(0,191,255,.35);
+      box-shadow: inset 0 0 30px rgba(0,191,255,.08);
+      backdrop-filter: blur(4px);
+    }
+
+    .btn {
+      appearance: none; border: 0; cursor: pointer; border-radius: 12px; padding: 16px 22px; font-weight: 700;
+      color: #04121f; background: var(--blue); letter-spacing: .3px; box-shadow: 0 12px 24px rgba(0,191,255,.2);
+      transition: transform .2s ease, box-shadow .2s ease; font-family: Poppins, Inter, sans-serif;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 18px 34px rgba(0,191,255,.3), 0 0 28px rgba(0,191,255,.35); }
+
+    .input {
+      width: 100%; padding: 16px; border-radius: 10px; border: 1px solid var(--stroke);
+      background: rgba(255,255,255,0.07); color: var(--white); outline: none; font-size: 15px;
+    }
+    .input::placeholder { color: #cdd7e3; }
+    .input:focus { border-color: rgba(0,191,255,.6); box-shadow: 0 0 0 3px rgba(0,191,255,.15); }
+
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(18px, 3vw, 32px); align-items: stretch; }
+    @media (max-width: 900px) { .grid-3 { grid-template-columns: 1fr; } }
+
+    .card { background: var(--card); border: 1px solid var(--stroke); border-radius: 16px; padding: 28px; box-shadow: var(--shadow); }
+    .muted { color: var(--muted); }
+
+    /* ---------- Global animated neural background ---------- */
+    #bgWrap { position: fixed; inset: 0; z-index: -2; }
+    #bgCanvas { width: 100%; height: 100%; display: block; background:
+      radial-gradient(1000px 600px at 70% 20%, rgba(0,191,255,.10), transparent 60%),
+      radial-gradient(800px 500px at 20% 0%, rgba(0,191,255,.10), transparent 60%),
+      radial-gradient(900px 600px at 50% 100%, rgba(0,86,184,.18), transparent 60%),
+      var(--navy);
+    }
+
+    /* Parallax neural strands overlay */
+    .neural-strands { position: fixed; inset: -8% -8% 0 -8%; z-index: -1; pointer-events: none; opacity: .45; }
+    .neural-strands svg { width: 120%; height: auto; }
+
+    /* ---------- Hero ---------- */
+    .hero { min-height: 100vh; display: grid; place-items: center; text-align: center; overflow: hidden; }
+    .hero-inner { position: relative; z-index: 1; }
+    .logo { font-family: Poppins, Inter, sans-serif; font-weight: 800; font-size: clamp(28px, 4vw, 42px); letter-spacing: .4px; margin-bottom: 18px; }
+    .h1 { font-size: clamp(36px, 6vw, 64px); margin: 8px 0 12px; text-shadow: 0 10px 40px rgba(0,0,0,.5); }
+    .h2 { font-weight: 500; font-size: clamp(16px, 2.2vw, 20px); color: #dbe7ff; margin: 6px 0 26px; }
+
+    .cta-panel { display: grid; grid-template-columns: 1fr auto; gap: 12px; width: min(680px, 92vw); margin: 24px auto 0; background: rgba(10,25,47,.6); border: 1px solid rgba(255,255,255,.10); border-radius: 16px; padding: 12px; backdrop-filter: blur(8px); }
+    @media (max-width: 640px) { .cta-panel { grid-template-columns: 1fr; } }
+
+    /* Reveal animations */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity .8s ease, transform .8s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ---------- Section styles ---------- */
+    .section-title { font-size: clamp(26px, 3.6vw, 40px); margin: 0 0 16px; }
+    .section-lead { font-size: clamp(15px, 1.7vw, 18px); color: #d2deff; max-width: 900px; margin: 0 auto 36px; }
+
+    .icon { width: 44px; height: 44px; color: var(--blue); flex: 0 0 auto; }
+    .item { display: flex; flex-direction: column; gap: 8px; }
+    .item h3 { margin: 12px 0 6px; font-size: 22px; line-height: 1.25; }
+    .item p { margin: 0; color: #c6d3ea; }
+
+    /* ---------- Partners (HTML badges for perfect font rendering) ---------- */
+    .partners { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px; }
+    @media (max-width: 700px) { .partners { grid-template-columns: 1fr; } }
+    .logo-card { display: flex; align-items: center; gap: 18px; min-height: 110px; background: var(--card); border: 1px solid var(--stroke); border-radius: 14px; box-shadow: var(--shadow); padding: 18px 22px; }
+    .logo-badge { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 999px; border: 2px solid var(--blue); color: var(--blue); }
+    .logo-text { font: 600 18px/1.35 Poppins, Inter, sans-serif; color: #e6f7ff; }
+
+    /* ---------- CTA 2 ---------- */
+    .cta2 { text-align: center; }
+
+    .divider { height: 1px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.12), rgba(255,255,255,0)); margin: 24px 0; }
+
+    footer { border-top: 1px solid rgba(255,255,255,.08); padding: 20px 0; color: #b5c3da; font-size: 14px; }
+    .foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    @media (max-width: 640px) { .foot { flex-direction: column; } }
+    .social { display: inline-flex; gap: 12px; }
+    .social a { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 10px; border: 1px solid var(--stroke); color: var(--white); background: rgba(255,255,255,0.04); text-decoration: none; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+    .social a:hover { transform: translateY(-2px); border-color: rgba(0,191,255,.6); box-shadow: 0 10px 18px rgba(0,191,255,.25); }
+
+    /* Reduced motion support */
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- GLOBAL ANIMATED BACKDROP -->
+  <div id="bgWrap"><canvas id="bgCanvas"></canvas></div>
+  <div class="neural-strands" aria-hidden="true">
+    <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#00BFFF" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="#00BFFF" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <g fill="none" stroke="url(#g)" stroke-width="1">
+        <path d="M-50 200 C 200 150, 400 450, 650 300 S 1100 50, 1650 250"/>
+        <path d="M-80 520 C 160 460, 420 720, 780 540 S 1280 260, 1700 440"/>
+        <path d="M-60 760 C 200 740, 420 620, 900 740 S 1400 840, 1680 820"/>
+        <path d="M-40 60 C 200 40, 420 120, 880 100 S 1420 40, 1680 120"/>
+        <path d="M-40 360 C 240 420, 440 200, 940 360 S 1380 520, 1680 400"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="hero-inner container reveal">
+      <div class="eyebrow" style="margin-bottom:14px">Coming Soon</div>
+      <div class="logo" aria-label="SynaptOm">SynaptOm</div>
+      <h1 class="h1">The Science of Advantage.</h1>
+      <p class="h2">Translating Neuroscience into Peak Human Performance. Coming Soon.</p>
+
+      <div class="container" style="max-width:860px;">
+        <p class="muted" style="max-width:720px;margin:0 auto 18px">Be the first to know when we launch. Join our exclusive waitlist for early access and insights.</p>
+        <form class="cta-panel" id="heroForm" novalidate>
+          <input class="input" id="heroEmail" type="email" placeholder="Enter your email address" aria-label="Email address" required />
+          <button class="btn" type="submit">REQUEST EARLY ACCESS</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHO WE ARE -->
+  <section id="about">
+    <div class="container">
+      <h2 class="section-title reveal">Bridging the Lab and the Leaderboard.</h2>
+      <p class="section-lead reveal">SynaptOm was born from a singular passion: to translate the profound discoveries of brain science into real-world, human impact. We design and deliver world-class, scientifically validated programs that enhance cognitive, psychological, and physical performance for elite corporate and athletic domains.</p>
+
+      <div class="grid-3">
+        <div class="card item reveal">
+          <!-- Brain icon -->
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M15.5 8.5a3 3 0 1 0-3-3"/>
+            <path d="M8.5 8.5a3 3 0 1 1 3-3"/>
+            <path d="M12 6v12"/>
+            <path d="M7 10H6a3 3 0 0 0 0 6h1"/>
+            <path d="M17 10h1a3 3 0 1 1 0 6h-1"/>
+            <path d="M9 10v6M15 10v6"/>
+          </svg>
+          <h3>Cognitive Enhancement</h3>
+          <p>Neuroscience-led methods that sharpen focus, expand working memory, and elevate decision-making under pressure.</p>
+        </div>
+
+        <div class="card item reveal">
+          <!-- Corporate icon -->
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="18" rx="1"/>
+            <rect x="14" y="7" width="7" height="14" rx="1"/>
+            <path d="M6.5 6h.01M6.5 10h.01M6.5 14h.01M17.5 10h.01M17.5 14h.01M17.5 18h.01"/>
+          </svg>
+          <h3>Corporate Performance</h3>
+          <p>Leader readiness, team dynamics, and resilience programs engineered for measurable productivity and innovation gains.</p>
+        </div>
+
+        <div class="card item reveal">
+          <!-- Athlete icon -->
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M17 3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"/>
+            <path d="M13 21l1-5-3-3 2-3 4 2 3-1"/>
+            <path d="M4 17l5-2 2 2"/>
+          </svg>
+          <h3>Athletic Excellence</h3>
+          <p>Training frameworks that convert neural plasticity into elite consistency, speed of learning, and clutch performance.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOUNDATION / SOCIAL PROOF -->
+  <section id="foundation">
+    <div class="container">
+      <h2 class="section-title reveal">Rooted in Scientific Rigor.</h2>
+      <p class="section-lead reveal">Our work is built on a bedrock of collaborative excellence and evidence-based practice. We are proud to build our foundation through strategic partnerships with globally recognized institutions.</p>
+      <div class="divider"></div>
+      <p class="muted reveal" style="text-transform:uppercase; letter-spacing:1.6px; font-weight:600">Our Founding Partners:</p>
+      <div class="partners">
+        <div class="logo-card reveal">
+          <div class="logo-badge" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M7 12h10"/></svg>
+          </div>
+          <div class="logo-text">Centre for Neuroscience at CUSAT</div>
+        </div>
+        <div class="logo-card reveal">
+          <div class="logo-badge" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 12h8M12 8v8"/></svg>
+          </div>
+          <div class="logo-text">CENABH — Centre of Excellence in Neurodegeneration & Brain Health</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA 2 -->
+  <section class="cta2">
+    <div class="container">
+      <h2 class="section-title reveal">Unlock Your Potential.</h2>
+      <p class="section-lead reveal">The future of performance is here. Join us.</p>
+      <form class="cta-panel reveal" id="ctaForm" novalidate>
+        <input class="input" id="ctaEmail" type="email" placeholder="Enter your email address" aria-label="Email address" required />
+        <button class="btn" type="submit">REQUEST EARLY ACCESS</button>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container foot">
+      <div>© 2025 SynaptOm. All Rights Reserved.</div>
+      <div class="social">
+        <a href="#" aria-label="LinkedIn" title="LinkedIn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        </a>
+        <a href="#" aria-label="Contact Us" title="Contact Us">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="m22 6-10 7L2 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ===== Canvas-based neural network animation (lightweight) =====
+    (function(){
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const canvas = document.getElementById('bgCanvas');
+      const ctx = canvas.getContext('2d');
+      let w, h, dpr, nodes; let mouse={x:-9999,y:-9999};
+
+      function resize(){
+        dpr = Math.min(window.devicePixelRatio||1, 2);
+        w = canvas.width = Math.floor(innerWidth*dpr);
+        h = canvas.height = Math.floor(innerHeight*dpr);
+        canvas.style.width = innerWidth+'px';
+        canvas.style.height = innerHeight+'px';
+        init();
+      }
+
+      function init(){
+        const count = Math.floor((innerWidth*innerHeight)/14000); // density-aware
+        nodes = Array.from({length: count}, ()=>({
+          x: Math.random()*w,
+          y: Math.random()*h,
+          vx: (Math.random()-.5)*0.12*dpr,
+          vy: (Math.random()-.5)*0.12*dpr,
+          r: (Math.random()*1.2+0.6)*dpr
+        }));
+      }
+
+      function step(){
+        ctx.clearRect(0,0,w,h);
+        // links
+        for(let i=0;i<nodes.length;i++){
+          const a = nodes[i];
+          for(let j=i+1;j<nodes.length;j++){
+            const b = nodes[j];
+            const dx=a.x-b.x, dy=a.y-b.y; const dist = Math.hypot(dx,dy);
+            if(dist<120*dpr){
+              const alpha = (1 - dist/(120*dpr)) * 0.35;
+              ctx.strokeStyle = 'rgba(0,191,255,'+alpha+')';
+              ctx.lineWidth = 1*dpr; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+            }
+          }
+        }
+        // nodes
+        for(const n of nodes){
+          const mdx = n.x - mouse.x*dpr, mdy = n.y - mouse.y*dpr; const mDist = Math.hypot(mdx,mdy);
+          if(mDist<150*dpr){ n.vx += mdx/mDist*0.0006; n.vy += mdy/mDist*0.0006; }
+          n.x += n.vx; n.y += n.vy;
+          if(n.x<0||n.x>w) n.vx*=-1; if(n.y<0||n.y>h) n.vy*=-1;
+          const grad = ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,6*dpr);
+          grad.addColorStop(0,'rgba(255,255,255,.85)');
+          grad.addColorStop(1,'rgba(0,191,255,.0)');
+          ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(n.x,n.y,6*dpr,0,Math.PI*2); ctx.fill();
+        }
+        requestAnimationFrame(step);
+      }
+
+      function start(){
+        resize();
+        if(!prefersReduced){ step(); }
+      }
+
+      window.addEventListener('resize', resize, {passive:true});
+      window.addEventListener('mousemove', e=>{ mouse.x=e.clientX; mouse.y=e.clientY; }, {passive:true});
+      start();
+    })();
+
+    // Simple email capture demo + validation (replace with real backend when ready)
+    function wireForm(id){
+      const form=document.getElementById(id); if(!form) return;
+      form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        const input=form.querySelector("input[type='email']");
+        const email=(input?.value||'').trim();
+        const valid=/[^@\s]+@[^@\s]+\.[^@\s]+/.test(email);
+        if(!valid){ input?.focus(); input?.setCustomValidity('Please enter a valid email address.'); input?.reportValidity(); return; }
+        form.innerHTML = '<div class="card" style="grid-column:1/-1;text-align:center">Thank you! You\'re on the list. We\'ll be in touch soon.</div>';
+      });
+    }
+    wireForm('heroForm');
+    wireForm('ctaForm');
+
+    // IntersectionObserver reveal
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach((e)=>{ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target);} })
+    }, {threshold:.14});
+    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  </script>
+</body>
+</html>
